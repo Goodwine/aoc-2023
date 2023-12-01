@@ -1,0 +1,6 @@
+# Zig
+zig-cache/
+zig-out/
+
+# Not allowed by AOC TOS.
+*.txt
