@@ -24,6 +24,13 @@ test {
 fn preprocess(input: []const u8) In {
     var lines = aoc.lines(input);
 
+    // Aaaand... I hate Zig now. So if I want a dynamic buffer I must deal with
+    // allocations myself because Zig is not as powerful as Rust. Like it's a
+    // plus tat I don't have to worry about the borrowing and Box<> shenanigans
+    // from Rust, but now I have to remember to call `allocator.free()`, or else
+    // we all become unhappy, and there's no static analysis to remember that.
+    // Because I don't want to deal with that, here we have a memory blob.
+    // I guess it's not too bad, just not used to this kinda thing >_<.
     var gameBuf: [128][32]Draw = std.mem.zeroes([128][32]Draw);
     var gameId: u8 = 0;
     while (lines.next()) |line| : (gameId += 1) {
