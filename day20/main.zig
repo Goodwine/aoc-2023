@@ -13,7 +13,7 @@ const inputs = [_]Input{
 };
 
 pub fn main() !void {
-    std.debug.print("\nDay 2\n==========\n", .{});
+    std.debug.print("\nDay 20\n==========\n", .{});
     aoc.solver(In, Out, "{d}", &inputs, preprocess, p1, reset, p2);
 }
 
