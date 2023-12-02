@@ -93,7 +93,9 @@ pub fn solve(
         std.fmt.fmtDuration(timer.read()),
     });
     const result1 = runPart(IN, OUT, fmt, 1, p1, &data, &timer);
+    timer.reset();
     reset(&data);
+    std.debug.print("(resetting {})\n", .{std.fmt.fmtDuration(timer.read())});
     const result2 = runPart(IN, OUT, fmt, 2, p2, &data, &timer);
     return [_]Error!OUT{ result1, result2 };
 }
