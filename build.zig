@@ -8,15 +8,11 @@ pub fn build(b: *std.build.Builder) !void {
     const run_step = b.step("all", "Runs all AOC");
     const test_step = b.step("all_tests", "Runs all AOC tests (Use 'zig build --summary all all_tests')");
 
-    var prev_step: ?*std.Build.Step = null;
     for (0..25) |i| {
         const day_steps = try day(b, aoc, i + 1);
-        if (prev_step) |s| day_steps[0].dependOn(s);
-        prev_step = day_steps[0];
+        run_step.dependOn(day_steps[0]);
         test_step.dependOn(day_steps[1]);
     }
-
-    if (prev_step) |s| run_step.dependOn(s);
 }
 
 fn day(b: *std.build.Builder, aoc: *std.build.Module, d: usize) ![2]*std.build.Step {
