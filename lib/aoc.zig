@@ -88,7 +88,10 @@ pub fn solve(
 ) [2]Error!OUT {
     var timer = std.time.Timer.start() catch unreachable;
     var data = preprocess(input);
-    std.debug.print("\n[{s}]\n----------\n", .{name});
+    std.debug.print("\n[{s} - (parsing {})]\n----------------------------\n", .{
+        name,
+        std.fmt.fmtDuration(timer.read()),
+    });
     const result1 = runPart(IN, OUT, fmt, 1, p1, &data, &timer);
     reset(&data);
     const result2 = runPart(IN, OUT, fmt, 2, p2, &data, &timer);
