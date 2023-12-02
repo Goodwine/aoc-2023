@@ -8,8 +8,8 @@ const In = []const [32]Draw;
 const Out = usize;
 const Input = aoc.Input(Out);
 const inputs = [_]Input{
-    .{ .name = "small", .input = small_txt, .wantP1 = 8, .wantP2 = 2776 },
-    .{ .name = "large", .input = input_txt, .wantP1 = 2286, .wantP2 = 25 },
+    .{ .name = "small", .input = small_txt, .wantP1 = 8, .wantP2 = 2286 },
+    .{ .name = "large", .input = input_txt, .wantP1 = 2776, .wantP2 = 68638 },
 };
 
 pub fn main() !void {
