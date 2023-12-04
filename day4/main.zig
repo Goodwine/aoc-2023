@@ -4,17 +4,12 @@ const std = @import("std");
 const small_txt = @embedFile("small.txt");
 const input_txt = @embedFile("input.txt");
 
-const In = []const Card;
+const In = []const u6; // Map of ticket ID => number of wins.
 const Out = usize;
 const Input = aoc.Input(Out);
 const inputs = [_]Input{
-    .{ .name = "small", .input = small_txt, .wantP1 = 13, .wantP2 = 9 },
-    .{ .name = "large", .input = input_txt, .wantP1 = 5, .wantP2 = 25 },
-};
-
-const Card = struct {
-    winning: std.AutoHashMap(usize, Nothing),
-    numbers: []const usize,
+    .{ .name = "small", .input = small_txt, .wantP1 = 13, .wantP2 = 30 },
+    .{ .name = "large", .input = input_txt, .wantP1 = 25010, .wantP2 = 9924412 },
 };
 
 const Nothing = struct {};
@@ -34,7 +29,7 @@ fn preprocess(input: []const u8) In {
     _ = arena.reset(.retain_capacity);
 
     var lineIterator = aoc.lines(input);
-    var list = std.ArrayList(Card).init(arena.allocator());
+    var list = std.ArrayList(u6).init(arena.allocator());
     while (lineIterator.next()) |line| {
         var splitter = aoc.splitAny(line, ":|");
         _ = splitter.next(); // Skip "Card {d}:"
@@ -44,7 +39,12 @@ fn preprocess(input: []const u8) In {
 
         var winning = std.AutoHashMap(usize, Nothing).init(arena.allocator());
         for (winningList) |w| winning.put(w, .{}) catch unreachable;
-        list.append(.{ .winning = winning, .numbers = numbers }) catch unreachable;
+
+        var matches: u6 = 0;
+        for (numbers) |n| {
+            if (winning.contains(n)) matches += 1;
+        }
+        list.append(matches) catch unreachable;
     }
     return list.toOwnedSlice() catch unreachable;
 }
@@ -66,13 +66,9 @@ const one: usize = 1;
 
 fn p1(input: *In) !Out {
     var sum: usize = 0;
-    for (input.*) |card| {
-        var matches: u6 = 0;
-        for (card.numbers) |n| {
-            if (card.winning.contains(n)) matches += 1;
-        }
-        if (matches == 0) continue;
-        sum += one << (matches - 1);
+    for (input.*) |wins| {
+        if (wins == 0) continue;
+        sum += one << (wins - 1);
     }
     return sum;
 }
@@ -82,13 +78,8 @@ fn p2(input: *In) !Out {
     listMaker.appendNTimes(1, input.len) catch unreachable;
     var ticketTracker = listMaker.toOwnedSlice() catch unreachable;
 
-    for (input.*, 0..) |card, id| {
-        var matches: u6 = 0;
-        for (card.numbers) |n| {
-            if (card.winning.contains(n)) matches += 1;
-        }
-        if (matches == 0) continue;
-        for (0..matches) |prize| {
+    for (input.*, 0..) |wins, id| {
+        for (0..wins) |prize| {
             // Supposedly this will never ever go out of bouds.
             ticketTracker[id + prize + 1] += ticketTracker[id];
         }
