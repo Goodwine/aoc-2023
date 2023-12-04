@@ -66,13 +66,11 @@ fn reset(input: *In) void {
     _ = input;
 }
 
-const one: usize = 1;
-
 fn p1(input: *In) !Out {
     var sum: usize = 0;
     for (input.*) |wins| {
         if (wins == 0) continue;
-        sum += one << (wins - 1);
+        sum += @as(usize, 1) << (wins - 1);
     }
     return sum;
 }
