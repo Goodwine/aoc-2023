@@ -29,6 +29,7 @@ const PartNumberGroup = struct {
 fn preprocess(input: []const u8) In {
     const lineSize = (std.mem.indexOfScalar(u8, input, '\n') orelse unreachable) + 1;
 
+    // Compile-time buffer. I don't want to deal with the allocator yet.
     var groups = [_]PartNumberGroup{.{}} ** 1024;
     var groupCount: usize = 0;
 
@@ -77,6 +78,9 @@ fn parseGroup(
 }
 
 fn extractNumber(input: []const u8, lineSize: usize, row: usize, col: usize) ?Out {
+    // This should check for negative numbers, however there are no negative
+    // unsigned numbers. The program will crash instead. I didn't bother to
+    // handle it because the input doesn't have an operator at row or column 0.
     if (row * lineSize >= input.len or col == lineSize) return null;
 
     const target = input[row * lineSize + col];
