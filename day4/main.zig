@@ -28,34 +28,38 @@ test {
 fn preprocess(input: []const u8) In {
     _ = arena.reset(.retain_capacity);
 
-    var lineIterator = aoc.lines(input);
     var list = std.ArrayList(u6).init(arena.allocator());
+    var winning = std.AutoHashMap(usize, Nothing).init(arena.allocator());
+    defer winning.deinit();
+    var numBuf = std.ArrayList(usize).init(arena.allocator());
+    defer numBuf.deinit();
+
+    var lineIterator = aoc.lines(input);
     while (lineIterator.next()) |line| {
         var splitter = aoc.splitAny(line, ":|");
         _ = splitter.next(); // Skip "Card {d}:"
 
-        const winningList = parseInts(usize, splitter.next() orelse "");
-        const numbers = parseInts(usize, splitter.next() orelse "");
-
-        var winning = std.AutoHashMap(usize, Nothing).init(arena.allocator());
+        const winningList = parseInts(usize, &numBuf, splitter.next() orelse "");
+        winning.clearRetainingCapacity();
         for (winningList) |w| winning.put(w, .{}) catch unreachable;
 
+        const numbers = parseInts(usize, &numBuf, splitter.next() orelse "");
         var matches: u6 = 0;
         for (numbers) |n| {
             if (winning.contains(n)) matches += 1;
         }
         list.append(matches) catch unreachable;
     }
-    return list.toOwnedSlice() catch unreachable;
+    return list.items;
 }
 
-fn parseInts(comptime T: type, input: []const u8) []const usize {
-    var list = std.ArrayList(usize).init(arena.allocator());
+fn parseInts(comptime T: type, buf: *std.ArrayList(T), input: []const u8) []const T {
+    buf.clearRetainingCapacity();
     var numberIterator = aoc.splitAny(input, " ");
     while (numberIterator.next()) |numberRaw| {
-        list.append(std.fmt.parseInt(T, numberRaw, 10) catch unreachable) catch unreachable;
+        buf.append(std.fmt.parseInt(T, numberRaw, 10) catch unreachable) catch unreachable;
     }
-    return list.toOwnedSlice() catch unreachable;
+    return buf.items;
 }
 
 fn reset(input: *In) void {
@@ -76,7 +80,7 @@ fn p1(input: *In) !Out {
 fn p2(input: *In) !Out {
     var listMaker = std.ArrayList(usize).init(arena.allocator());
     listMaker.appendNTimes(1, input.len) catch unreachable;
-    var ticketTracker = listMaker.toOwnedSlice() catch unreachable;
+    var ticketTracker = listMaker.items;
 
     for (input.*, 0..) |wins, id| {
         for (0..wins) |prize| {
