@@ -12,8 +12,6 @@ const inputs = [_]Input{
     .{ .name = "large", .input = input_txt, .wantP1 = 25010, .wantP2 = 9924412 },
 };
 
-const Nothing = struct {};
-
 var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
 
 pub fn main() !void {
@@ -29,7 +27,7 @@ fn preprocess(input: []const u8) In {
     _ = arena.reset(.retain_capacity);
 
     var list = std.ArrayList(u6).init(arena.allocator());
-    var winning = std.AutoHashMap(usize, Nothing).init(arena.allocator());
+    var winning = std.AutoHashMap(usize, aoc.Nothing).init(arena.allocator());
     defer winning.deinit();
     var numBuf = std.ArrayList(usize).init(arena.allocator());
     defer numBuf.deinit();

@@ -135,3 +135,33 @@ pub fn parseInts(comptime T: type, buf: *std.ArrayList(T), input: []const u8, de
     }
     return buf.toOwnedSlice() catch unreachable;
 }
+
+pub const Nothing = struct {};
+
+pub fn QueueBlob(comptime T: type, comptime bufSize: usize) type {
+    return struct {
+        const Self = @This();
+
+        data: [bufSize]T,
+        size: usize = bufSize,
+        head: usize = 0,
+        // non inclusive
+        tail: usize = 0,
+
+        pub fn push(self: *Self, v: T) void {
+            self.data[self.tail] = v;
+            self.tail += 1;
+        }
+
+        pub fn pop(self: *Self) ?T {
+            if (self.head == self.tail) return null;
+            const v = self.data[self.head];
+            self.head += 1;
+            return v;
+        }
+
+        pub fn init() Self {
+            return std.mem.zeroes(Self);
+        }
+    };
+}
