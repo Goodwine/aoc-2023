@@ -126,3 +126,12 @@ fn runPart(
         return err;
     }
 }
+
+pub fn parseInts(comptime T: type, buf: *std.ArrayList(T), input: []const u8, delimeters: []const u8) []const T {
+    buf.clearRetainingCapacity();
+    var numberIterator = splitAny(input, delimeters);
+    while (numberIterator.next()) |numberRaw| {
+        buf.append(std.fmt.parseInt(T, numberRaw, 10) catch unreachable) catch unreachable;
+    }
+    return buf.toOwnedSlice() catch unreachable;
+}

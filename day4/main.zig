@@ -39,11 +39,11 @@ fn preprocess(input: []const u8) In {
         var splitter = aoc.splitAny(line, ":|");
         _ = splitter.next(); // Skip "Card {d}:"
 
-        const winningList = parseInts(usize, &numBuf, splitter.next() orelse "");
+        const winningList = aoc.parseInts(usize, &numBuf, splitter.next() orelse "", " ");
         winning.clearRetainingCapacity();
         for (winningList) |w| winning.put(w, .{}) catch unreachable;
 
-        const numbers = parseInts(usize, &numBuf, splitter.next() orelse "");
+        const numbers = aoc.parseInts(usize, &numBuf, splitter.next() orelse "", " ");
         var matches: u6 = 0;
         for (numbers) |n| {
             if (winning.contains(n)) matches += 1;
@@ -51,15 +51,6 @@ fn preprocess(input: []const u8) In {
         list.append(matches) catch unreachable;
     }
     return list.items;
-}
-
-fn parseInts(comptime T: type, buf: *std.ArrayList(T), input: []const u8) []const T {
-    buf.clearRetainingCapacity();
-    var numberIterator = aoc.splitAny(input, " ");
-    while (numberIterator.next()) |numberRaw| {
-        buf.append(std.fmt.parseInt(T, numberRaw, 10) catch unreachable) catch unreachable;
-    }
-    return buf.items;
 }
 
 fn reset(input: *In) void {
