@@ -165,3 +165,7 @@ pub fn QueueBlob(comptime T: type, comptime bufSize: usize) type {
         }
     };
 }
+
+pub fn absoluteDiff(comptime T: type, a: T, b: T) T {
+    return @max(a, b) - @min(a, b);
+}
