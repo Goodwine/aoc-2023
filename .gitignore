@@ -4,3 +4,6 @@ zig-out/
 
 # Not allowed by AOC TOS.
 *.txt
+
+# Random stuff
+.vscode/
