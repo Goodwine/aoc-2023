@@ -62,14 +62,14 @@ fn preprocess(input: []const u8) In {
 
     var lines = aoc.lines(input);
 
-    const rawTimes = (lines.next() orelse unreachable)["Distance:".len..];
+    const rawTimes = (lines.next().?)["Distance:".len..];
     const times = aoc.parseInts(usize, &intBuf, rawTimes, " ");
     var it = aoc.splitAny(rawTimes, " ");
     while (it.next()) |numberRaw| strBuf.appendSlice(numberRaw) catch unreachable;
     const finalTime = std.fmt.parseInt(usize, strBuf.items, 10) catch unreachable;
     strBuf.clearRetainingCapacity();
 
-    const rawDistances = (lines.next() orelse unreachable)["Distance:".len..];
+    const rawDistances = (lines.next().?)["Distance:".len..];
     const distances = aoc.parseInts(usize, &intBuf, rawDistances, " ");
     it = aoc.splitAny(rawDistances, " ");
     while (it.next()) |numberRaw| strBuf.appendSlice(numberRaw) catch unreachable;

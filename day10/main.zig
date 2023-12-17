@@ -55,7 +55,7 @@ fn In(comptime T: type) type {
         }
 
         fn start(self: *Self) [2]isize {
-            const index = std.mem.indexOfScalar(u8, self.data, 'S') orelse unreachable;
+            const index = std.mem.indexOfScalar(u8, self.data, 'S').?;
             return self.coord(index);
         }
     };
@@ -83,7 +83,7 @@ test {
 fn preprocess(input: []const u8) In([]const u8) {
     var lines = aoc.lines(input);
 
-    const firstLine = lines.next() orelse unreachable;
+    const firstLine = lines.next().?;
     const cols = firstLine.len;
 
     var rows: usize = 1;
@@ -174,9 +174,9 @@ fn blowUp3(input: *In([]const u8), seen: []const Out) In([bufferSize * 9]u8) {
         if (d == 0) continue;
 
         const originalCoords = input.coord(originalPos);
-        const pipe = input.at(originalCoords[0], originalCoords[1]) orelse unreachable;
+        const pipe = input.at(originalCoords[0], originalCoords[1]).?;
 
-        const blownPosCenter = blownUp.pos(originalCoords[0] * 3 + 1, originalCoords[1] * 3 + 1) orelse unreachable;
+        const blownPosCenter = blownUp.pos(originalCoords[0] * 3 + 1, originalCoords[1] * 3 + 1).?;
         const row, const col = blownUp.coord(blownPosCenter);
         const pipeCoords = [_]?[2]isize{
             .{ row, col },
@@ -200,7 +200,7 @@ fn blowUp3(input: *In([]const u8), seen: []const Out) In([bufferSize * 9]u8) {
 fn exploreOutside(input: *In([bufferSize * 9]u8), row: isize, col: isize) void {
     const pipe = input.at(row, col);
     if (pipe != null) return;
-    const pos = input.pos(row, col) orelse unreachable;
+    const pos = input.pos(row, col).?;
     input.data[pos] = 'O';
 
     const adjacent = [_][2]isize{
@@ -224,7 +224,7 @@ fn solve(input: *In([]const u8)) []const Out {
         const i, const j = next.coord;
         const pos = if (input.pos(i, j)) |p| p else continue;
         if (seen[pos] != 0) continue;
-        const pipe = input.at(i, j) orelse unreachable;
+        const pipe = input.at(i, j).?;
         if (pipe & next.from == 0) continue; // impossible case like offbounds, no connection
 
         seen[pos] = next.dist; // commit distance.

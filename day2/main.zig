@@ -36,7 +36,7 @@ fn preprocess(input: []const u8) In {
     while (lines.next()) |line| : (gameId += 1) {
         var gameSplitter = aoc.split(line, ": ");
         _ = gameSplitter.next();
-        const rawDraws = gameSplitter.next() orelse unreachable;
+        const rawDraws = gameSplitter.next().?;
 
         var drawId: u8 = 0;
         var draws = aoc.split(rawDraws, "; ");
@@ -45,9 +45,9 @@ fn preprocess(input: []const u8) In {
 
             while (cubeSplitter.next()) |cube| {
                 var countColorSplitter = aoc.split(cube, " ");
-                const countString = countColorSplitter.next() orelse unreachable;
+                const countString = countColorSplitter.next().?;
                 const count = std.fmt.parseUnsigned(u8, countString, 10) catch unreachable;
-                const color = countColorSplitter.next() orelse unreachable;
+                const color = countColorSplitter.next().?;
                 switch (color[0]) {
                     'r' => {
                         gameBuf[gameId][drawId].red += count;

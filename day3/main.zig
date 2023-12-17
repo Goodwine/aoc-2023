@@ -27,7 +27,7 @@ const PartNumberGroup = struct {
 };
 
 fn preprocess(input: []const u8) In {
-    const lineSize = (std.mem.indexOfScalar(u8, input, '\n') orelse unreachable) + 1;
+    const lineSize = (std.mem.indexOfScalar(u8, input, '\n').?) + 1;
 
     // Compile-time buffer. I don't want to deal with the allocator yet.
     var groups = [_]PartNumberGroup{.{}} ** 1024;

@@ -34,7 +34,7 @@ fn preprocess(input: []const u8) In {
 
     var lines = aoc.lines(input);
     var row: usize = 0;
-    const cols = (lines.peek() orelse unreachable).len;
+    const cols = (lines.peek().?).len;
     while (lines.next()) |line| : (row += 1) {
         for (line, 0..) |ch, col| {
             if (ch != '#') continue;

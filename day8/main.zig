@@ -28,14 +28,14 @@ fn preprocess(input: []const u8) In {
     var nodes = std.StringHashMap([2][]const u8).init(arena.allocator());
 
     var lines = aoc.lines(input);
-    const actions = lines.next() orelse unreachable;
+    const actions = lines.next().?;
     while (lines.next()) |line| {
         // Only get the letters from this format:
         // AAA = (BBB, BBB)
         var it = aoc.splitAny(line, "() =,");
-        const name = it.next() orelse unreachable;
-        const left = it.next() orelse unreachable;
-        const right = it.next() orelse unreachable;
+        const name = it.next().?;
+        const left = it.next().?;
+        const right = it.next().?;
         nodes.put(name, .{ left, right }) catch unreachable;
     }
 
@@ -54,7 +54,7 @@ fn p1(input: *In) !Out {
     var steps: Out = 0;
     return while (true) : (steps += 1) {
         const action = input.actions[steps % input.actions.len];
-        const node = input.nodes.get(current) orelse unreachable;
+        const node = input.nodes.get(current).?;
         current = switch (action) {
             'L' => node[0],
             'R' => node[1],
@@ -85,7 +85,7 @@ fn p2(input: *In) !Out {
         var steps: Out = 0;
         item.z = while (true) : (steps += 1) {
             const action = input.actions[steps % input.actions.len];
-            const node = input.nodes.get(current) orelse unreachable;
+            const node = input.nodes.get(current).?;
             current = switch (action) {
                 'L' => node[0],
                 'R' => node[1],
@@ -97,9 +97,9 @@ fn p2(input: *In) !Out {
         } else unreachable;
     }
 
-    var lcm: Out = work.items[0].z orelse unreachable;
+    var lcm: Out = work.items[0].z.?;
     for (work.items[1..]) |item| {
-        lcm = aoc.lcm(Out, lcm, item.z orelse unreachable);
+        lcm = aoc.lcm(Out, lcm, item.z.?);
     }
 
     return lcm;

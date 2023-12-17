@@ -124,13 +124,13 @@ fn preprocess(input: []const u8) In {
     var almanacEntries = aoc.split(input, "\n\n");
 
     // Parse the seeds.
-    const seedsRaw = almanacEntries.next() orelse unreachable;
+    const seedsRaw = almanacEntries.next().?;
     const seeds = aoc.parseInts(Out, &buffer, seedsRaw["seeds: ".len..], " ");
 
     // Parse all the almanac maps.
     while (almanacEntries.next()) |entry| {
         instructions.clearRetainingCapacity();
-        const splitAt = 1 + (std.mem.indexOfScalar(u8, entry, ':') orelse unreachable);
+        const splitAt = 1 + (std.mem.indexOfScalar(u8, entry, ':').?);
 
         const data = aoc.parseInts(Out, &buffer, entry[splitAt..], " \n");
         var window = std.mem.window(Out, data, 3, 3);
