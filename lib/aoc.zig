@@ -174,3 +174,9 @@ pub fn absoluteDiff(comptime T: type, a: T, b: T) T {
 pub fn lcm(comptime T: type, a: T, b: T) T {
     return a * b / std.math.gcd(a, b);
 }
+
+pub fn pause() void {
+    const stdin = std.io.getStdIn().reader();
+    var buf: [8]u8 = undefined;
+    _ = stdin.readUntilDelimiter(buf[0..], '\n') catch {};
+}
