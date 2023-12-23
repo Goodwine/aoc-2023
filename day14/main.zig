@@ -30,16 +30,35 @@ fn reset(input: *In) void {
 }
 
 fn p1(input: *In) !Out {
-    return len(input);
+    var lineCount: usize = 0;
+    while (input.next()) |_| : (lineCount += 1) {}
+    input.reset();
+
+    var bufBlock = [_]Out{lineCount} ** 128;
+    const buf = bufBlock[0..input.peek().?.len];
+
+    var sum: Out = 0;
+    var row = lineCount;
+    while (input.next()) |line| : (row -= 1) {
+        for (line, 0..) |ch, col| {
+            switch (ch) {
+                'O' => {
+                    sum += buf[col];
+                    buf[col] -= 1;
+                },
+                '#' => {
+                    // sum += row; // Part 1 doesn't count round rocks.
+                    buf[col] = row - 1;
+                },
+                else => {},
+            }
+        }
+    }
+    return sum;
 }
 
 fn p2(input: *In) !Out {
-    const l = len(input);
-    return l * l;
-}
+    _ = input;
 
-fn len(input: *In) Out {
-    var c: usize = 0;
-    while (input.next()) |_| c += 1;
-    return c;
+    return 0;
 }
