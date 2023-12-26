@@ -1,8 +1,8 @@
 const std = @import("std");
 
 pub const LineIterator = TokenIterator(std.mem.DelimiterType.scalar);
-const CharIterator = TokenIterator(std.mem.DelimiterType.sequence);
-const AnyCharIterator = TokenIterator(std.mem.DelimiterType.any);
+pub const CharIterator = TokenIterator(std.mem.DelimiterType.sequence);
+pub const AnyCharIterator = TokenIterator(std.mem.DelimiterType.any);
 
 fn TokenIterator(comptime delimiter_type: std.mem.DelimiterType) type {
     return std.mem.TokenIterator(u8, delimiter_type);
