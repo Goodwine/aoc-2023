@@ -180,3 +180,27 @@ pub fn pause() void {
     var buf: [8]u8 = undefined;
     _ = stdin.readUntilDelimiter(buf[0..], '\n') catch {};
 }
+
+pub const StringGrid = struct {
+    const Self = @This();
+
+    data: []const u8,
+    n: usize,
+
+    pub fn init(data: []const u8) StringGrid {
+        return .{
+            .data = data,
+            .n = std.mem.indexOf(u8, data, '\n').?,
+        };
+    }
+
+    // position considering the new-line character.
+    fn pos(self: Self, r: usize, c: usize) usize {
+        return r * (self.n + 1) + c;
+    }
+
+    pub fn at(self: Self, r: usize, c: usize) ?u8 {
+        if (r >= self.n or c >= self.n) return null;
+        return self.data[pos];
+    }
+};
